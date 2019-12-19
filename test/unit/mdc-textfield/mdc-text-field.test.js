@@ -40,7 +40,7 @@ const {cssClasses} = MDCTextFieldFoundation;
 
 const getFixture = () => bel`
   <div class="mdc-text-field mdc-text-field--with-leading-icon">
-    <i class="material-icons mdc-text-field__icon" tabindex="0" role="button">event</i>
+    <i class="material-icons mdc-text-field__leading-icon" tabindex="0" role="button">event</i>
     <input type="text" class="mdc-text-field__input" id="my-text-field">
     <label class="mdc-floating-label" for="my-text-field">My Label</label>
     <div class="mdc-line-ripple"></div>
@@ -179,7 +179,7 @@ test('#constructor instantiates a leading icon if an icon element is present', (
 test('#constructor instantiates an icon for both icon elements if present', () => {
   const root = getFixture(true);
   root.classList.add('mdc-text-field--with-trailing-icon');
-  root.appendChild(bel`<i class="mdc-text-field__icon material-icons">3d_rotations</i>`);
+  root.appendChild(bel`<i class="mdc-text-field__trailing-icon material-icons">3d_rotations</i>`);
   const component = new MDCTextField(root);
   assert.instanceOf(component.leadingIcon_, MDCTextFieldIcon);
   assert.instanceOf(component.trailingIcon_, MDCTextFieldIcon);
@@ -187,9 +187,9 @@ test('#constructor instantiates an icon for both icon elements if present', () =
 
 test('#constructor instantiates a trailing icon if the icon is present', () => {
   const root = getFixture(true);
-  const icon = root.querySelector('.mdc-text-field__icon');
-  root.removeChild(icon);
-  root.appendChild(icon);
+  const leadingIcon = root.querySelector('.mdc-text-field__leading-icon');
+  root.removeChild(leadingIcon);
+  root.appendChild(bel`<i class="mdc-text-field__trailing-icon material-icons">3d_rotations</i>`);
   root.classList.add('mdc-text-field--with-trailing-icon');
   root.classList.remove('mdc-text-field--with-leading-icon');
   const component = new MDCTextField(root);
@@ -367,7 +367,7 @@ test('#destroy handles undefined optional ripple gracefully', () => {
 test('#destroy calls destroy for both icon elements if present', () => {
   const root = getFixture(true);
   root.classList.add('mdc-text-field--with-trailing-icon');
-  root.appendChild(bel`<i class="mdc-text-field__icon material-icons">3d_rotations</i>`);
+  root.appendChild(bel`<i class="mdc-text-field__trailing-icon material-icons">3d_rotations</i>`);
   const component = new MDCTextField(root);
   component.leadingIcon_.destroy = td.func('leadingIcon_.destroy');
   component.trailingIcon_.destroy = td.func('trailingIcon_.destroy');
