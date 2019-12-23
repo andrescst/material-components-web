@@ -39,12 +39,12 @@ import {cssClasses as characterCounterCssClasses} from '../../../packages/mdc-te
 const {cssClasses} = MDCTextFieldFoundation;
 
 const getFixture = () => bel`
-  <div class="mdc-text-field mdc-text-field--with-leading-icon">
+  <label class="mdc-text-field mdc-text-field--with-leading-icon">
     <i class="material-icons mdc-text-field__icon" tabindex="0" role="button">event</i>
     <input type="text" class="mdc-text-field__input" id="my-text-field">
     <label class="mdc-floating-label" for="my-text-field">My Label</label>
     <div class="mdc-line-ripple"></div>
-  </div>
+  </label>
 `;
 
 const getHelperLineWithHelperText = () => bel`
@@ -212,9 +212,9 @@ test('#constructor instantiates an outline on the `.mdc-notched-outline` element
 
 test('#constructor handles undefined optional sub-elements gracefully', () => {
   const root = bel`
-    <div class="mdc-text-field">
+    <label class="mdc-text-field">
       <input type="text" class="mdc-text-field__input" id="my-text-field">
-    </div>
+    </label>
   `;
   assert.doesNotThrow(() => new MDCTextField(root));
 });
@@ -230,9 +230,9 @@ test('default adapter methods handle sub-elements when present', () => {
 
 test('default adapter methods handle undefined optional sub-elements gracefully', () => {
   const root = bel`
-    <div class="mdc-text-field">
+    <label class="mdc-text-field">
       <input type="text" class="mdc-text-field__input" id="my-text-field">
-    </div>
+    </label>
   `;
   const component = new MDCTextField(root);
   const adapter = component.getDefaultFoundation().adapter_;
@@ -349,9 +349,9 @@ test('#destroy cleans up the outline if present', () => {
 
 test('#destroy handles undefined optional sub-elements gracefully', () => {
   const root = bel`
-    <div class="mdc-text-field">
+    <label class="mdc-text-field">
       <input type="text" class="mdc-text-field__input" id="my-text-field">
-    </div>
+    </label>
   `;
   const component = new MDCTextField(root);
   assert.doesNotThrow(() => component.destroy());
@@ -538,6 +538,20 @@ test('#adapter.setLineRippleTransformOrigin calls the setRippleCenter method on 
   const {component, lineRipple} = setupTest();
   component.getDefaultFoundation().adapter_.setLineRippleTransformOrigin(100);
   td.verify(lineRipple.setRippleCenter(100));
+});
+
+test('clicking icon does not focus input', () => {
+  const root = getFixture();
+  const icon = root.querySelector('.mdc-text-field__icon');
+  const component = new MDCTextField(root);
+  document.body.appendChild(root);
+  component.root_.click();
+  assert.equal(component.input_, document.activeElement, 'input_ should be focused');
+  component.input_.blur();
+  assert.notEqual(component.input_, document.activeElement, 'ensure input_ was blurred');
+  icon.click();
+  assert.notEqual(component.input_, document.activeElement, 'input_ should not be focused');
+  document.body.removeChild(root);
 });
 
 function setupMockFoundationTest(root = getFixture()) {
